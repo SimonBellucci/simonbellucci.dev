@@ -1,6 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-}
+  swcMinify: true,
+  trailingSlash: true,
+  poweredByHeader: false,
+  compress: true,
+  optimizeFonts: true,
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [{ hostname: 'localhost' }, { hostname: 'via.placeholder.com' }],
+    minimumCacheTTL: 600,
+  },
+  experimental: {
+    appDir: true,
+    isrMemoryCacheSize: 0,
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: [/(components|hooks|utils)\\index.ts/i],
+      sideEffects: false,
+    });
 
-module.exports = nextConfig
+    return config;
+  },
+};
+
+module.exports = nextConfig;

@@ -3,23 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  @font-face {
-    font-family: Inter;
-    font-weight: 400;
-    src: url(/fonts/Inter/Inter-Regular.ttf) format('ttf');
-  }
-  @font-face {
-    font-family: Inter;
-    font-weight: 500;
-    src: url(/fonts/Inter/Inter-Medium.ttf) format('ttf');
-  }
-  @font-face {
-    font-family: Inter;
-    font-weight: 600;
-    src: url(/fonts/Inter/Inter-SemiBold.ttf) format('ttf');
-  }
   html {
-    font-family: Inter, system-ui, sans-serif;
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;

@@ -1,9 +1,22 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './app/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './patterns/**/*.{js,ts,jsx,tsx}',
+    './hooks/**/*.{js,ts,jsx,tsx}',
+    './types/**/*.{js,ts,jsx,tsx}',
+  ],
   darkMode: 'class',
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
+    fontFamily: {
+      sans: ['var(--font-inter)'],
+    },
     extend: {
       screens: {
         'max-lg': { max: '1023px' },
@@ -52,5 +65,11 @@ module.exports = {
         '@supports ((-webkit-backdrop-filter:blur(0)) or (backdrop-filter:blur(0))) or (-webkit-backdrop-filter:blur(0))',
       );
     }),
+  ],
+  safelist: [
+    {
+      pattern: /col-(span|start|end)-/,
+      variants: ['md', 'lg', 'xl', '2xl'],
+    },
   ],
 };
