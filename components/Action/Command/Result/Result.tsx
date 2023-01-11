@@ -1,13 +1,16 @@
 'use client';
 
+import { forwardRef, ComponentProps } from 'react';
 import { ActionImpl } from 'kbar';
-import { FunctionComponent, ElementType } from 'react';
 import { cx } from 'class-variance-authority';
 
-export const CommandResult: FunctionComponent<{
-  item: ActionImpl | string;
-  active: boolean;
-}> = ({ item, active }) => {
+export const CommandResult = forwardRef<
+  ComponentProps<'div'>,
+  {
+    item: ActionImpl | string;
+    active: boolean;
+  }
+>(function CommandResult({ item, active }, ref) {
   if (typeof item === 'string') {
     return (
       <span className="flex h-12 items-center px-4 text-xs font-semibold uppercase text-gray-500  dark:text-gray-400">
@@ -47,4 +50,4 @@ export const CommandResult: FunctionComponent<{
       ) : null}
     </div>
   );
-};
+});
