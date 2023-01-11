@@ -11,9 +11,11 @@ import {
 import { cx } from 'class-variance-authority';
 import { useAction } from '@hooks/useAction';
 import { CommandResult } from '@components/Action/Command';
+import { CommandBarProps } from '@components/Action/Command/Bar/Bar.types';
 
-export const CommandBar: FunctionComponent<ComponentProps<'div'>> = ({ children }) => {
-  const { actions } = useAction();
+export const CommandBar: FunctionComponent<CommandBarProps> = ({ children, articles }) => {
+  const { actions } = useAction(articles);
+
   return (
     <KBarProvider actions={actions}>
       <KBarPortal>

@@ -13,8 +13,9 @@ import {
 } from '@heroicons/react/24/outline';
 import { Icon, IconGithub, IconLinkedin, IconTwitter } from '@components/Typography';
 import { useSocial } from '@hooks/useSocial';
+import { ArticleMetadata } from '@lib/article';
 
-export const useAction = () => {
+export const useAction = (articles: ArticleMetadata[]) => {
   const router = useRouter();
   const { setTheme } = useTheme();
   const { socials } = useSocial();
@@ -41,6 +42,15 @@ export const useAction = () => {
   ];
 
   const navigationActions: Action[] = [
+    {
+      id: 'home',
+      name: 'Home',
+      shortcut: ['n', 'h'],
+      keywords: 'homepage',
+      section: 'Navigation',
+      icon: <Icon icon={ArrowRightIcon} size="md" />,
+      perform: () => router.push('/'),
+    },
     {
       id: 'about',
       name: 'About',
@@ -78,14 +88,18 @@ export const useAction = () => {
       keywords: 'search articles',
       section: 'Articles',
     },
-    {
-      id: 'fake',
-      name: 'Fake article',
-      keywords: 'search articles',
-      section: 'Articles',
-      parent: 'articles-list',
-      perform: () => router.push('/articles/fake'),
-    },
+    ...(articles
+      ? articles.map(article => {
+          return {
+            id: article.slug,
+            name: article.title,
+            keywords: 'search articles',
+            section: 'Articles',
+            parent: 'articles-list',
+            perform: () => router.push(article.slug),
+          };
+        })
+      : []),
   ];
 
   const themeActions: Action[] = [

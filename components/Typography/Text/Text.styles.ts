@@ -1,18 +1,14 @@
 import { cva } from 'class-variance-authority';
-import {
-  center,
-  weight,
-  color,
-} from '@components/Typography/Typography.styles';
+import { center, weight, color } from '@components/Typography/Typography.styles';
 
-export const textStyles = cva('text transition-colors dark:text-white', {
+export const textStyles = cva('text transition-colors leading-loose dark:text-white', {
   variants: {
     size: {
-      'xs': 'text-xs',
-      'sm': 'text-sm',
-      'base': 'text-base',
-      'lg': 'text-lg',
-      'xl': 'text-xl',
+      xs: 'text-xs',
+      sm: 'text-sm',
+      base: 'text-base',
+      lg: 'text-lg',
+      xl: 'text-xl',
       '2xl': 'text-2xl',
     },
     weight,

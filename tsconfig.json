@@ -19,7 +19,8 @@
       "@assets/*": ["assets/*"],
       "@components/*": ["components/*"],
       "@patterns/*": ["patterns/*"],
-      "@hooks/*": ["hooks/*"]
+      "@hooks/*": ["hooks/*"],
+      "@lib/*": ["lib/*"]
     },
     "plugins": [
       {

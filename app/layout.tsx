@@ -5,6 +5,7 @@ import { Analytics } from './analytics';
 import { Header } from '@components/Navigation/Header';
 import { Footer } from '@components/Navigation/Footer';
 import '../styles/globals.css';
+import { getArticlesMetadata } from '@lib/article';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -12,10 +13,12 @@ const inter = Inter({
 });
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
+  const articles = getArticlesMetadata();
+
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans`}>
-        <Providers>
+        <Providers articles={articles}>
           <Header />
           {children}
           <Footer />

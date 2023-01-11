@@ -2,18 +2,13 @@ import { FunctionComponent } from 'react';
 import { Section } from '@components/Layout/Section';
 import { ArticlesProps } from '@patterns/List/Article';
 import { Heading, Text } from '@components/Typography';
-import { CardBlog } from '@components/Content';
+import { CardArticle } from '@components/Content';
+import { getArticlesMetadata } from '@lib/article';
 
 export const ListArticle: FunctionComponent<ArticlesProps> = ({ data }) => {
-  const fakeCard = {
-    date: new Date(),
-    title: 'Lorem Ipsum',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mattis orci rutrum pulvinar nisl, quam neque in.',
-    url: '/test',
-  };
+  const articlesMetadata = getArticlesMetadata(3);
 
-  if (!data) return null;
+  if (!data || !articlesMetadata.length) return null;
 
   return (
     <Section>
@@ -24,9 +19,9 @@ export const ListArticle: FunctionComponent<ArticlesProps> = ({ data }) => {
         {data.introduction}
       </Text>
       <div className="mt-6 space-y-6 lg:mt-10 lg:space-y-10">
-        <CardBlog {...fakeCard} />
-        <CardBlog {...fakeCard} />
-        <CardBlog {...fakeCard} />
+        {articlesMetadata.map(article => (
+          <CardArticle article={article} key={article.slug} />
+        ))}
       </div>
     </Section>
   );

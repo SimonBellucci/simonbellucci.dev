@@ -15,7 +15,7 @@ const NotFound = () => {
   return (
     <main className={`${inter.variable} font-sans`}>
       <ThemeProvider attribute="class">
-        <CommandBar>
+        {/*<CommandBar>
           <Header />
           <div className="flex h-[calc(100vh-theme(spacing.20))] w-full items-center justify-center overflow-hidden">
             <div className="relative">
@@ -28,7 +28,7 @@ const NotFound = () => {
               <Gradient className="absolute -top-[300px] left-[80%] -z-10" />
             </div>
           </div>
-        </CommandBar>
+        </CommandBar>*/}
       </ThemeProvider>
     </main>
   );
