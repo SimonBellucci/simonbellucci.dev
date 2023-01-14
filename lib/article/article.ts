@@ -44,7 +44,7 @@ export const getArticleMetadata = (
       updated: matterResult.data.updated,
       categories: matterResult.data.categories,
       type: matterResult.data.type,
-      slug: `${articlesFolder}${addExtension ? fileName : fileName.replace(markdownExtension, '')}`,
+      slug: addExtension ? fileName : fileName.replace(markdownExtension, ''),
     };
   } catch (e) {
     return null;
