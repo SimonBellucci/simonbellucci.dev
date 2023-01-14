@@ -67,10 +67,10 @@ export const Header: FunctionComponent<ComponentProps<'header'>> = ({ className 
             >
               <AnimatePresence>
                 {resolvedTheme === 'dark' && icon === 'moon' ? (
-                  <IconSun duration={transitionDuration} />
+                  <IconMoon duration={transitionDuration} />
                 ) : (
                   resolvedTheme === 'light' &&
-                  icon === 'sun' && <IconMoon duration={transitionDuration} />
+                  icon === 'sun' && <IconSun duration={transitionDuration} />
                 )}
               </AnimatePresence>
             </ButtonControl>

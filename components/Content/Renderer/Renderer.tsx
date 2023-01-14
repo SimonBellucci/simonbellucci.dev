@@ -2,6 +2,7 @@ import { FunctionComponent } from 'react';
 import { MDXRemote } from 'next-mdx-remote';
 import { Heading, Text } from '@components/Typography';
 import { RendererProps } from '@components/Content/Renderer';
+import { CodeBlock, CodeInline } from '@components/Content/Code';
 
 export const Renderer: FunctionComponent<RendererProps> = props => {
   return (
@@ -14,6 +15,8 @@ export const Renderer: FunctionComponent<RendererProps> = props => {
             {props.children}
           </Heading>
         ),
+        pre: props => <CodeBlock className="mb-9">{props.children}</CodeBlock>,
+        code: props => <CodeInline>{props.children}</CodeInline>,
       }}
     />
   );
