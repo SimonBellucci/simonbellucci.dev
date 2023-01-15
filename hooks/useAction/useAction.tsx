@@ -96,7 +96,7 @@ export const useAction = (articles: ArticleMetadata[]) => {
             keywords: 'search articles',
             section: 'Articles',
             parent: 'articles-list',
-            perform: () => router.push(article.slug),
+            perform: () => router.push(article.permalink),
           };
         })
       : []),

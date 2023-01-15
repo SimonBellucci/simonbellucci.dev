@@ -4,12 +4,11 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { Heading, Text } from '@components/Typography';
 import { Button } from '@components/Action';
 import { CardArticleProps } from '@components/Content';
-import { articlesFolder } from '@lib/article';
 
 export const CardArticle: FunctionComponent<CardArticleProps> = ({ article }) => {
   return (
     <Link
-      href={`${articlesFolder}${article.slug}`}
+      href={article.permalink}
       className="flex cursor-pointer flex-col rounded-[16px] p-6 transition-colors hover:bg-gray-100/40 dark:hover:bg-gray-700/30 lg:flex-row"
     >
       <div className="mb-3 shrink-0 text-sm text-gray-600 transition-colors dark:text-gray-300 lg:mb-0 lg:mr-20">

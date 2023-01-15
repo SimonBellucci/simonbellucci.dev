@@ -5,8 +5,8 @@ export const CodeInline: FunctionComponent<ComponentProps<'code'>> = props => {
   return (
     <code
       className={cx([
-        'transitions-colors rounded-lg border border-gray-200 bg-gray-100 p-1 text-sm text-rose-400',
-        'dark:border-gray-700 dark:bg-[#282A36] dark:text-[#BD93F9]',
+        'transitions-colors rounded-lg border border-gray-200 bg-editor-bg-light p-1 text-sm text-editor-fg-light',
+        'dark:border-gray-700 dark:bg-editor-bg-dark dark:text-editor-fg-dark',
       ])}
     >
       {props.children}

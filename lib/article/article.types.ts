@@ -6,4 +6,5 @@ export interface ArticleMetadata {
   categories: string;
   type: string;
   slug: string;
+  permalink: string;
 }

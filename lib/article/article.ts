@@ -36,6 +36,7 @@ export const getArticleMetadata = (
       'utf8',
     );
     const matterResult = matter(content);
+    const slug = addExtension ? fileName : fileName.replace(markdownExtension, '');
 
     return {
       title: matterResult.data.title,
@@ -44,7 +45,8 @@ export const getArticleMetadata = (
       updated: matterResult.data.updated,
       categories: matterResult.data.categories,
       type: matterResult.data.type,
-      slug: addExtension ? fileName : fileName.replace(markdownExtension, ''),
+      slug,
+      permalink: articlesFolder + slug,
     };
   } catch (e) {
     return null;
