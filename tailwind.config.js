@@ -35,6 +35,20 @@ module.exports = {
             tertiary: '#9900BF',
           },
         },
+        editor: {
+          bg: {
+            light: '#F6F8FA',
+            dark: '#282A36',
+          },
+          fg: {
+            light: '#E3116C',
+            dark: '#ff79c6',
+          },
+          line: {
+            light: '#d1d4d8',
+            dark: '#6272a4',
+          },
+        },
       },
       keyframes: {
         gradient: {
@@ -59,11 +73,13 @@ module.exports = {
     },
   },
   plugins: [
+    plugin(function ({ addVariant }) {}),
     plugin(function ({ addVariant }) {
       addVariant(
         'supports-backdrop-blur',
         '@supports ((-webkit-backdrop-filter:blur(0)) or (backdrop-filter:blur(0))) or (-webkit-backdrop-filter:blur(0))',
       );
+      addVariant('light', '.light &');
     }),
   ],
   safelist: [
