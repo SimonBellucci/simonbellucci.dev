@@ -1,5 +1,5 @@
 import { ComponentProps, FunctionComponent } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { m, useScroll, useTransform } from 'framer-motion';
 import { cx } from 'class-variance-authority';
 
 export const Gradient: FunctionComponent<ComponentProps<'div'>> = ({ className }) => {
@@ -7,7 +7,7 @@ export const Gradient: FunctionComponent<ComponentProps<'div'>> = ({ className }
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 2]);
 
   return (
-    <motion.div className={cx(className)} style={{ scale }}>
+    <m.div className={cx(className)} style={{ scale }}>
       <div
         className={cx(
           'h-[500px] w-[500px] animate-gradient rounded-full',
@@ -22,6 +22,6 @@ export const Gradient: FunctionComponent<ComponentProps<'div'>> = ({ className }
           )}
         />
       </div>
-    </motion.div>
+    </m.div>
   );
 };

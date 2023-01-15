@@ -21,7 +21,7 @@ export const Section: FunctionComponent<SectionProps> = ({
   );
 
   return (
-    <section className={cx(className, 'relative overflow-hidden', sectionStyles({ py }))}>
+    <section className={cx(className, 'relative', sectionStyles({ py }))}>
       {container ? <Container>{content}</Container> : content}
     </section>
   );

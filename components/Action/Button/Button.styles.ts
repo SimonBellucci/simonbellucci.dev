@@ -66,7 +66,7 @@ export const buttonStyles = cva(
       {
         variant: 'tertiary',
         disabled: false,
-        className: ['hover:text-rose-400', 'dark:text-white', 'dark:hover:text-green-400'],
+        className: ['hover:text-rose-400', 'dark:text-white', 'dark:hover:text-sky-400'],
       },
       {
         disabled: false,

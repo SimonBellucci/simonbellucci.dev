@@ -1,45 +1,18 @@
-import { ComponentProps, FunctionComponent, useEffect, useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { ComponentProps, FunctionComponent } from 'react';
 import { useTheme } from 'next-themes';
 import { useKBar } from 'kbar';
-import { IconSun, IconMoon } from '@components/Typography/Icon';
 import { Logo } from '@components/Utility/Logo';
 import { ButtonControl } from '@components/Action';
 import { usePlatform } from '@hooks/usePlatform';
 import { cx } from 'class-variance-authority';
 import { HeaderItem } from '@components/Navigation/Header';
 import { Container } from '@components/Layout';
-
-type ThemeIcon = 'sun' | 'moon';
+import { ThemeSwitchIcon } from '@components/Typography/Icon/ThemeSwitch/ThemeSwitch';
 
 export const Header: FunctionComponent<ComponentProps<'header'>> = ({ className }) => {
   const { resolvedTheme, setTheme } = useTheme();
   const { query } = useKBar();
   const { isMac } = usePlatform();
-
-  const [mounted, setMounted] = useState(false);
-  const [icon, setIcon] = useState<ThemeIcon>(resolvedTheme === 'dark' ? 'moon' : 'sun');
-
-  const transitionDuration = 0.25;
-
-  useEffect(() => {
-    let updateIcon: NodeJS.Timeout;
-
-    if (mounted) {
-      updateIcon = setTimeout(() => {
-        if (icon === 'moon' && resolvedTheme === 'light') return setIcon('sun');
-        if (icon === 'sun' && resolvedTheme === 'dark') return setIcon('moon');
-      }, transitionDuration * 1000 + 50);
-    }
-
-    setMounted(true);
-
-    return () => {
-      updateIcon && clearTimeout(updateIcon);
-    };
-  }, [resolvedTheme]);
-
-  if (!mounted) return null;
 
   return (
     <header
@@ -65,14 +38,7 @@ export const Header: FunctionComponent<ComponentProps<'header'>> = ({ className 
               onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
               className="min-h-[42px] min-w-[42px]"
             >
-              <AnimatePresence>
-                {resolvedTheme === 'dark' && icon === 'moon' ? (
-                  <IconMoon duration={transitionDuration} />
-                ) : (
-                  resolvedTheme === 'light' &&
-                  icon === 'sun' && <IconSun duration={transitionDuration} />
-                )}
-              </AnimatePresence>
+              <ThemeSwitchIcon />
             </ButtonControl>
             <ButtonControl className="hidden lg:flex" onClick={query.toggle}>
               {isMac ? 'CMD + K' : 'CTRL + K'}

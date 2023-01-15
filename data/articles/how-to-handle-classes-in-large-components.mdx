@@ -1,0 +1,154 @@
+---
+title: How to handle classes in large components with Tailwind and React ?
+subtitle: A quick guide that showcase the way we can properly handle classes with cva through curated examples and interactive playgrounds.
+date: 11-01-2023
+updated: 11-01-2023
+categories: ['frontend']
+keywords: [
+'frontend',
+'react',
+'tailwind',
+]
+slug: how-to-handle-classes-in-large-components
+type: blogPost
+---
+
+En tant que développeur front-end un de mes objectifs sur chaque projet est d'avoir du code propre, concis et facilement maintenable. Et pour être honnête, avec Tailwind c'est parfois très compliqué d'atteindre cet objectf, surtout lorsqu'il s'agit de créer des gros composants comportant plusieurs variations et états.
+
+But don't get me wrong, j'adore travailler avec Tailwind ❤️ et l'utilise depuis sa sortie sur tous mes projets, j'ai d'ailleurs construit ce blog avec !
+
+Mais revenons sur le sujet et prenons l'exemple d'un bouton simple, ce composant va être visuellement différent en fonction de son `variant`, il peut également être `disabled` et avoir différentes tailles. Toutes ces `props` vont générer beaucoup de classes, résultant très rapidement en un gros bazar au niveau de notre code 🤯, sutout si on souhaite combiner des `props` ou en rajouter d'autres par la suite.
+
+## What about `classnames` ?
+
+[classnames](https://github.com/JedWatson/classnames) est un excellent package, et règle en partie ce problème en nous permettant de segmenter nos classes Tailwind au sein de notre composant. J'ai utilisé ce package pendant très longtemps et j'étais satisfait de la logique que j'avais mis en place pour organiser mes classes.
+
+Regardons l'exemple simplifié du bouton de mon design system créé avec `classnames` :
+
+```tsx title=Wtf file=test.tsx
+import { ComponentProps, FunctionComponent } from 'react';  
+import classnames from 'classnames';  
+  
+interface ButtonProps extends ComponentProps<'button'> {  
+  variant?: 'primary' | 'secondary';  
+  size?: 'sm' | 'md' | 'lg';  
+}  
+  
+const classes = {  
+  base: 'text-base font-medium rounded-xl transition-all duration-300 inline-flex items-center w-fit h-fit gap-2',  
+  variant: {  
+    primary: [  
+      'bg-gray-800 text-white shadow-transparent',  
+      'hover:shadow-hover hover:shadow-rose-400',  
+      'dark:bg-white dark:text-gray-800',  
+      'dark:hover:shadow-sky-500',  
+    ],  
+    secondary: [  
+      'border border-rose-400 text-rose-400 bg-transparent',  
+      'hover:border-transparent hover:bg-rose-400 hover:text-white',  
+      'dark:border-sky-500 dark:text-sky-500',  
+      'dark:hover:border-transparent dark:hover:text-white dark:hover:bg-sky-500',  
+    ],  
+  },  
+  disabled: {  
+    base: 'cursor-not-allowed',  
+    variant: {  
+      primary: ['bg-gray-200 text-gray-500', 'dark:bg-gray-300 dark:text-gray-600'],  
+      secondary: 'border border-gray-400 text-gray-400',  
+    },  
+  },  
+  size: {  
+    sm: 'text-sm py-2 px-4',  
+    md: 'text-base py-2 px-5',  
+    lg: 'text-lg py-2 px-6',  
+  },  
+};  
+  
+export const ButtonBlog: FunctionComponent<ButtonProps> = ({  
+  children,  
+  variant = 'primary',  
+  size = 'md',  
+  disabled,
+  className,
+  ...props  
+}) => {  
+  return (  
+    <button  
+      className={classnames(  
+        classes.base,  
+        disabled ? classes.disabled.variant[variant] : classes.variant[variant],  
+        disabled && classes.disabled.base,  
+        classes.size[size],
+        className
+      )}  
+      {...props}  
+    >  
+      {children}  
+    </button>  
+  );  
+};
+```
+
+```
+import { ComponentProps, FunctionComponent } from 'react';  
+import classnames from 'classnames';  
+  
+interface ButtonProps extends ComponentProps<'button'> {  
+  variant?: 'primary' | 'secondary';  
+  size?: 'sm' | 'md' | 'lg';  
+}  
+  
+const classes = {  
+  base: 'text-base font-medium rounded-xl transition-all duration-300 inline-flex items-center w-fit h-fit gap-2',  
+  variant: {  
+    primary: [  
+      'bg-gray-800 text-white shadow-transparent',  
+      'hover:shadow-hover hover:shadow-rose-400',  
+      'dark:bg-white dark:text-gray-800',  
+      'dark:hover:shadow-sky-500',  
+    ],  
+    secondary: [  
+      'border border-rose-400 text-rose-400 bg-transparent',  
+      'hover:border-transparent hover:bg-rose-400 hover:text-white',  
+      'dark:border-sky-500 dark:text-sky-500',  
+      'dark:hover:border-transparent dark:hover:text-white dark:hover:bg-sky-500',  
+    ],  
+  },  
+  disabled: {  
+    base: 'cursor-not-allowed',  
+    variant: {  
+      primary: ['bg-gray-200 text-gray-500', 'dark:bg-gray-300 dark:text-gray-600'],  
+      secondary: 'border border-gray-400 text-gray-400',  
+    },  
+  },  
+  size: {  
+    sm: 'text-sm py-2 px-4',  
+    md: 'text-base py-2 px-5',  
+    lg: 'text-lg py-2 px-6',  
+  },  
+};  
+  
+export const ButtonBlog: FunctionComponent<ButtonProps> = ({  
+  children,  
+  variant = 'primary',  
+  size = 'md',  
+  disabled,
+  className,
+  ...props  
+}) => {  
+  return (  
+    <button  
+      className={classnames(  
+        classes.base,  
+        disabled ? classes.disabled.variant[variant] : classes.variant[variant],  
+        disabled && classes.disabled.base,  
+        classes.size[size],
+        className
+      )}  
+      {...props}  
+    >  
+      {children}  
+    </button>  
+  );  
+};
+```

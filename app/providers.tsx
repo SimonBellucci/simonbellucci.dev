@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 import { CommandBar } from '@components/Action';
 import { ArticleMetadata } from '@lib/article';
+import { domAnimation, LazyMotion } from 'framer-motion';
 
 export const Providers = ({
   children,
@@ -14,7 +15,9 @@ export const Providers = ({
 }) => {
   return (
     <ThemeProvider attribute="class">
-      <CommandBar articles={articles}>{children}</CommandBar>
+      <LazyMotion features={domAnimation}>
+        <CommandBar articles={articles}>{children}</CommandBar>
+      </LazyMotion>
     </ThemeProvider>
   );
 };

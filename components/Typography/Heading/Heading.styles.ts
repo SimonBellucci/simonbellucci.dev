@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 import { weight, center, color } from '@components/Typography/Typography.styles';
 
 export const headingStyles = cva(
-  'display font-semibold text-gray-800 dark:text-white transition-colors',
+  'display font-semibold text-gray-800 dark:text-white !leading-snug transition-colors',
   {
     variants: {
       variant: {

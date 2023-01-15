@@ -38,6 +38,10 @@ export const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, classNa
     }
   };
 
+  /**
+   * Workaround waiting for Next Themes to properly handle Next13 appDir
+   * @see https://github.com/pacocoursey/next-themes/issues/152
+   */
   useEffect(() => {
     resolvedTheme && setTheme(resolvedTheme === 'dark' ? themeDark : themeLight);
   }, [resolvedTheme]);
