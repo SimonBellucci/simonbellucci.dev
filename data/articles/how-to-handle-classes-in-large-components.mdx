@@ -1,0 +1,385 @@
+---
+title: How to handle classes in large components with Tailwind and React ?
+subtitle: A guide that clearly demonstrates how to work effectively with classes in React using cva, via multiple examples and interactive playgrounds.
+date: 01-16-2023
+updated: 01-16-2023
+categories: ['frontend']
+slug: how-to-handle-classes-in-large-components-with-cva
+---
+
+As a front-end developer, one of my goals on every project is to have clean, concise and easily maintainable code. And to be honest, with Tailwind it's sometimes very difficult to achieve this goal, especially when creating large components with multiple variations and states.
+
+But don't get me wrong, I love working with Tailwind ❤️ and have been using it on all my projects since its release, I actually built this blog with it!
+
+Let's get back on topic though and take the example of a simple button, this component is going to be visually different depending on its `variant`, it can also be `disabled` and have different sizes. All these props will generate a lot of classes, resulting very quickly in a big mess in our code 🤯, especially if we want to combine props or add others later on.
+
+## What about <em>classnames</em> library ?
+
+The package [classnames](https://github.com/JedWatson/classnames) is excellent, and partially solves this problem by allowing us to split our Tailwind classes within our component. I used this package for a long time and was happy with the logic I had in place to organize my classes.
+
+Let's look at the simplified example of my design system button created with `classnames`, try changing the `variant`, `size` and `disabled` props :
+
+<CodeEditor
+  template="react-ts"
+  files={{
+    'App.tsx': `import { FunctionComponent } from 'react'
+import { Button } from './Button'
+              
+const App: FunctionComponent = () => {
+  return (
+    <div className="h-screen dark:bg-gray-800 grid gap-6 content-center justify-center">
+      <Button size="sm">Button</Button>
+      <Button>Button</Button>
+      <Button disabled>Button</Button>
+      <Button size="lg">Button</Button>
+      <Button size="sm" variant="secondary">Button</Button>
+      <Button variant="secondary">Button</Button>
+      <Button variant="secondary" disabled>Button</Button>
+      <Button size="lg" variant="secondary">Button</Button>
+    </div>
+  )
+}
+    
+export default App;
+`,
+    'Button.tsx': `import { FunctionComponent } from 'react';  
+import classnames from 'classnames';
+import { ButtonProps } from './Button.types';
+import { classes } from './Button.styles';
+  
+export const Button: FunctionComponent<ButtonProps> = ({  
+  children,  
+  variant = 'primary',  
+  size = 'md',  
+  disabled,
+  className,
+  ...props  
+}) => {  
+  return (  
+    <button  
+      className={classnames(  
+        classes.base,  
+        disabled ? classes.disabled.variant[variant] : classes.variant[variant],  
+        disabled && classes.disabled.base,  
+        classes.size[size],
+        className
+      )}  
+      {...props}  
+    >  
+      {children}  
+    </button>  
+  );  
+};
+    `,
+    'Button.types.ts': `import { ComponentProps } from 'react';
+    
+interface ButtonProps extends ComponentProps<'button'> {  
+  variant?: 'primary' | 'secondary';  
+  size?: 'sm' | 'md' | 'lg';  
+} 
+    `,
+    'Button.styles.ts': `export const classes = {  
+  base: 'text-base font-medium rounded-xl transition-all duration-300 inline-flex items-center w-fit h-fit gap-2',  
+  variant: {  
+    primary: [  
+      'bg-gray-800 text-white shadow-transparent',  
+      'hover:shadow-[0_2px_40px_-4px_rgba(0,0,0,1)] hover:shadow-rose-400',  
+      'dark:bg-white dark:text-gray-800',  
+      'dark:hover:shadow-sky-500',  
+    ],  
+    secondary: [  
+      'border border-rose-400 text-rose-400 bg-transparent',  
+      'hover:border-transparent hover:bg-rose-400 hover:text-white',  
+      'dark:border-sky-500 dark:text-sky-500',  
+      'dark:hover:border-transparent dark:hover:text-white dark:hover:bg-sky-500',  
+    ],  
+  },  
+  disabled: {  
+    base: 'cursor-not-allowed',  
+    variant: {  
+      primary: ['bg-gray-200 text-gray-500', 'dark:bg-gray-300 dark:text-gray-600'],  
+      secondary: 'border border-gray-400 text-gray-400',  
+    },  
+  },  
+  size: {  
+    sm: 'text-sm py-2 px-4',  
+    md: 'text-base py-2 px-5',  
+    lg: 'text-lg py-2 px-6',  
+  },  
+};`,
+  }}
+  customSetup={{
+    dependencies: {
+      classnames: '^2.3.1',
+    },
+  }}
+/>
+
+As you can see, the above code works perfectly, and to be honest, it's already clean, well organized and easily maintainable.
+
+However, several details can be improved:
+  - The conditional syntax in the `classnames` function is quite cumbersome, especially if we add more props. 
+- We have to manually assign classes to the props, and manually type the visual aspects of our component
+- The typing of our `classes` object must be added but will be tedious to set up and will duplicate our interface defined above
+
+## Can't we just get Stiches but for Tailwind 🙏 ?
+
+Some of you know or use [Stiches](https://stitches.dev/), a CSS-in-TS library that offers a very nice DX, and allows us to better organize the variants of our components as well as to combine and type them automatically: 🤩.
+
+Unfortunately with Tailwind we can't use Stiches... Or maybe we can 🤔 ?
+
+## Getting started cva
+
+Let's convert our code with [cva](https://github.com/joe-bell/cva)! First let's install the `yarn add class-variance-authority` library. `cva`, like Stiches, is based on the creation of variants and the composition of them. The structure I had in place before was already partly based on this principle, so it's quite simple to convert it with `cva`.
+
+<CodeEditor
+  template="react-ts"
+  files={{
+    'App.tsx': `import { FunctionComponent } from 'react'
+import { Button } from './Button'
+              
+const App: FunctionComponent = () => {
+  return (
+    <div className="h-screen dark:bg-gray-800 grid gap-6 content-center justify-center">
+      <Button size="sm">Button</Button>
+      <Button>Button</Button>
+      <Button disabled>Button</Button>
+      <Button size="lg">Button</Button>
+      <Button size="sm" variant="secondary">Button</Button>
+      <Button variant="secondary">Button</Button>
+      <Button variant="secondary" disabled>Button</Button>
+      <Button size="lg" variant="secondary">Button</Button>
+    </div>
+  )
+}
+    
+export default App;
+`,
+    'Button.tsx': `import { FunctionComponent } from 'react';
+import { cx } from 'class-variance-authority';
+import { ButtonProps } from './Button.types';
+import { buttonStyles } from './Button.styles';
+  
+export const Button: FunctionComponent<ButtonProps> = ({  
+  children,  
+  variant = 'primary',  
+  size = 'md',  
+  disabled,
+  className,
+  ...props  
+}) => {  
+  return (  
+    <button  
+      className={cx(
+        buttonStyles({  
+          variant,
+          size,
+          disabled,
+        }),
+        className,  
+      )}  
+      {...props}  
+    >  
+      {children}  
+    </button>  
+  );  
+};
+    `,
+    'Button.types.ts': `import { ComponentProps } from 'react';
+import { VariantProps } from 'class-variance-authority';
+    
+interface ButtonProps
+  extends Omit<ComponentProps<'button'>, 'disabled'>,
+    VariantProps<typeof buttonStyles> {}
+    `,
+    'Button.styles.ts': `import { cva } from 'class-variance-authority';
+              
+export const buttonStyles = cva(  
+  [  
+    'text-base font-medium rounded-xl transition-all duration-300 inline-flex items-center w-fit h-fit gap-2',  
+  ],  
+  {  
+    variants: {  
+      variant: {  
+        primary: 'rounded-xl',  
+        secondary: 'rounded-xl border',  
+      },  
+      size: {  
+        sm: 'text-sm py-2 px-4',  
+        md: 'text-base py-2 px-5',  
+        lg: 'text-lg py-2 px-6',  
+      },  
+      disabled: {  
+        true: 'cursor-not-allowed',  
+      },  
+    },  
+    compoundVariants: [  
+      {  
+        variant: 'primary',  
+        disabled: true,  
+        className: ['bg-gray-200 text-gray-500', 'dark:bg-gray-300 dark:text-gray-600'],  
+      },  
+      {  
+        variant: 'primary',  
+        disabled: false,  
+        className: [  
+          'bg-gray-800 text-white shadow-transparent',  
+          'hover:shadow-[0_2px_40px_-4px_rgba(0,0,0,1)] hover:shadow-rose-400',  
+          'dark:bg-white dark:text-gray-800',  
+          'dark:hover:shadow-sky-500',  
+        ],  
+      },  
+      {  
+        variant: 'secondary',  
+        disabled: true,  
+        className: 'border-gray-400 text-gray-400',  
+      },  
+      {  
+        variant: 'secondary',  
+        disabled: false,  
+        className: [  
+          'border-rose-400 text-rose-400 bg-transparent',  
+          'hover:border-transparent hover:bg-rose-400 hover:text-white',  
+          'dark:border-sky-500 dark:text-sky-500',  
+          'dark:hover:border-transparent dark:hover:text-white dark:hover:bg-sky-500',  
+        ],  
+      },  
+      {  
+        disabled: false,  
+        className: 'cursor-pointer',  
+      },  
+    ],  
+    defaultVariants: {  
+      variant: 'primary',  
+      size: 'md',  
+      disabled: false,  
+    },  
+  },  
+);`,
+  }}
+  customSetup={{
+    dependencies: {
+      'class-variance-authority': '^0.4.0',
+    },
+  }}
+/>
+
+We have the same result as before, but with one detail: our code is much more organized and clean! Let's explain in detail what we have done.
+
+In our `Button.styles.ts` file we have replaced the `classes` object with a container that uses the `cva` function. This function accepts two arguments: the first one is our base classes, i.e. the ones that will be present on our button component regardless of the variant. The second argument is an object made of three objects that I will explain in more detail.
+
+### Variants
+
+In the `variants` object I define all the variants of my component: `variant`, `size` and `disabled`.
+
+```
+variants: {  
+  variant: {  
+    primary: 'rounded-xl',  
+    secondary: 'rounded-xl border',  
+  },  
+  size: {  
+    sm: 'text-sm py-2 px-4',  
+    md: 'text-base py-2 px-5',  
+    lg: 'text-lg py-2 px-6',  
+  },  
+  disabled: {  
+    true: 'cursor-not-allowed',  
+  },  
+}
+```
+
+As you can see, for our `variant` props I define very few classes because I don't want to have class conflicts when my button is `disabled` or not. The rest of the classes will be added in our next `coumpoundVariant` object.
+
+### Compound variants
+
+It's within the `compoundVariants` object that I place the majority of my classes. Here for example I only want to apply my classes according to my `variant` and `disabled` props, and as said earlier, I don't want them to conflict, so I define them separately.
+
+```
+compoundVariants: [  
+  {  
+    variant: 'primary',  
+    disabled: true,  
+    className: ['bg-gray-200 text-gray-500', 'dark:bg-gray-300 dark:text-gray-600'],  
+  },  
+  {  
+    variant: 'primary',  
+    disabled: false,  
+    className: [  
+      'bg-gray-800 text-white shadow-transparent',  
+      'hover:shadow-[0_2px_40px_-4px_rgba(0,0,0,1)] hover:shadow-rose-400',  
+      'dark:bg-white dark:text-gray-800',  
+      'dark:hover:shadow-sky-500',  
+    ],  
+  },  
+  {  
+    variant: 'secondary',  
+    disabled: true,  
+    className: 'border-gray-400 text-gray-400',  
+  },  
+  {  
+    variant: 'secondary',  
+    disabled: false,  
+    className: [  
+      'border-rose-400 text-rose-400 bg-transparent',  
+      'hover:border-transparent hover:bg-rose-400 hover:text-white',  
+      'dark:border-sky-500 dark:text-sky-500',  
+      'dark:hover:border-transparent dark:hover:text-white dark:hover:bg-sky-500',  
+    ],  
+  },  
+  {  
+    disabled: false,  
+    className: 'cursor-pointer',  
+  },  
+],
+```
+
+### Default variants
+
+Finally the `defaultVariants` object allows me, as its name indicates, to specify which variants will be applied by default :
+
+```
+defaultVariants: {  
+  variant: 'primary',  
+  size: 'md',  
+  disabled: false,  
+}
+```
+
+### Automatic typing
+
+As you may have noticed, our types have been switched from manual to automatic input using `cva` and its `VariantProps` type. We just need to extend the type with the constant we created just now `VariantProps<typeof buttonStyles>`. So my interface looks like this now:
+
+```
+interface ButtonProps  
+  extends Omit<ComponentProps<'button'>, 'disabled'>,  
+    VariantProps<typeof buttonStyles> {}
+```
+
+### Automatic class association
+
+The biggest improvement we made is the automatic typing. We went from a manual props - classes association to an automatic association thanks to `cva` and the constant we created above, which gives us :
+
+```
+<button  
+  className={cx(  
+    buttonStyles({  
+      variant,  
+      size,  
+      disabled,  
+    }),  
+    className,  
+  )}  
+  {...props}  
+>  
+  {children}  
+</button> 
+```
+
+## Conclusion
+
+Using `cva` actually allows us to have a single source of truth for our styles, props, and types, making our code much more readable, maintainable, and offering a DX similar to what we find with Stiches.
+
+Here we covered the basics of `cva` and used a fairly simple example, to get a feel for the concepts of the library, but trust me, it's when you use it on large components that you'll fall in love with the package and won't be able to live without it!
+
+Hats off to Joe Bell and all the contributors who maintain and add more and more features to `cva` 🎉 !

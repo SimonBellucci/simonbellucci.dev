@@ -18,7 +18,6 @@
     "paths": {
       "@assets/*": ["assets/*"],
       "@components/*": ["components/*"],
-      "@patterns/*": ["patterns/*"],
       "@hooks/*": ["hooks/*"],
       "@lib/*": ["lib/*"]
     },

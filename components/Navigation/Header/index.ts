@@ -1,4 +1,4 @@
 'use client';
 
-export * from './Item/Item';
+export * from './Item';
 export * from './Header';

@@ -1,17 +1,15 @@
 import { FunctionComponent } from 'react';
 import { Section } from '@components/Layout';
-import { HeroHomeProps } from '@patterns/Hero/Home';
 import { Heading, IconGithub, IconLinkedin, IconTwitter, Text } from '@components/Typography';
 import { Button } from '@components/Action/Button';
 import { Gradient } from '@components/Utility/Gradient';
 import { useSocial } from '@hooks/useSocial';
 import { Link } from '@components/Action/Link/Link';
 import NextLink from 'next/link';
+import { HeroHomeProps } from '@components/Block/Hero/Home/Home.types';
 
-export const HeroHome: FunctionComponent<HeroHomeProps> = ({ data }) => {
+export const HeroHome: FunctionComponent<HeroHomeProps> = () => {
   const { socials } = useSocial();
-
-  if (!data) return null;
 
   return (
     <Section>
@@ -21,7 +19,8 @@ export const HeroHome: FunctionComponent<HeroHomeProps> = ({ data }) => {
         </Heading>
         <Text>
           Hello! I’m Simon Bellucci — front-end developer based in Strasbourg 🥨. Interested in
-          cryptocurrencies, human-machine interactions, spatial computing, science and productivity.
+          cryptocurrencies, human-computer interactions, spatial computing, science and
+          productivity.
         </Text>
         <Text>
           I’m currently working at{' '}
