@@ -33,7 +33,12 @@ const ArticlePage = async ({
       <ScrollUp />
       <article>
         <Section>
-          <HeroArticle data={article} />
+          <HeroArticle
+            data={{
+              content: article.content,
+              meta: article.data,
+            }}
+          />
           <Renderer {...source} />
         </Section>
       </article>

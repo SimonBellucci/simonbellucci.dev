@@ -3,12 +3,10 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@components/Action';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { Heading, Text } from '@components/Typography';
-import matter from 'gray-matter';
 import readingTime from 'reading-time';
+import { HeroArticleProps } from '@components/Block/Hero/Article/Article.types';
 
-export const HeroArticle: FunctionComponent<{ data: matter.GrayMatterFile<string> }> = ({
-  data: article,
-}) => {
+export const HeroArticle: FunctionComponent<HeroArticleProps> = ({ data: article }) => {
   const router = useRouter();
 
   const time = readingTime(article.content);
@@ -19,11 +17,11 @@ export const HeroArticle: FunctionComponent<{ data: matter.GrayMatterFile<string
         Back
       </Button>
       <Heading as="h1" variant="display-2" className="mb-4">
-        {article.data.title}
+        {article.meta.title}
       </Heading>
       <Text size="sm" className="text-gray-500 dark:!text-gray-400">
         {time.text} /{' '}
-        {new Date(article.data.date).toLocaleDateString('en-EN', {
+        {new Date(article.meta.date).toLocaleDateString('en-EN', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
