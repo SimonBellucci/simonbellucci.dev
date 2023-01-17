@@ -4,7 +4,6 @@ export interface ArticleMetadata {
   date: string;
   updated: string;
   categories: string;
-  type: string;
   slug: string;
   permalink: string;
 }

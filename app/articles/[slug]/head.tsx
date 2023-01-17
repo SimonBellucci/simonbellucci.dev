@@ -4,7 +4,7 @@ import { Seo } from '@components/Utility';
 const Head = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
 
-  const article = getArticleMetadata(slug, true);
+  const article = getArticleMetadata(slug);
 
   if (!article) return null;
 
