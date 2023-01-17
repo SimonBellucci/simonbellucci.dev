@@ -8,6 +8,7 @@ import { cx } from 'class-variance-authority';
 import { HeaderItem } from '@components/Navigation/Header';
 import { Container } from '@components/Layout';
 import { ThemeSwitchIcon } from '@components/Typography/Icon/ThemeSwitch/ThemeSwitch';
+import { Tag } from '@components/Indicator';
 
 export const Header: FunctionComponent<ComponentProps<'header'>> = ({ className }) => {
   const { resolvedTheme, setTheme } = useTheme();
@@ -29,9 +30,19 @@ export const Header: FunctionComponent<ComponentProps<'header'>> = ({ className 
         <nav className="flex items-center justify-between py-2 lg:py-4">
           <Logo />
           <ul className="flex space-x-4 self-center lg:space-x-12">
-            <HeaderItem href="/about">About</HeaderItem>
+            <HeaderItem href="/about" disabled>
+              About{' '}
+              <Tag size="sm" variant="primary">
+                soon
+              </Tag>
+            </HeaderItem>
             <HeaderItem href="/articles">Articles</HeaderItem>
-            <HeaderItem href="/tools">Tools</HeaderItem>
+            <HeaderItem href="/tools" disabled>
+              Tools
+              <Tag size="sm" variant="primary">
+                soon
+              </Tag>
+            </HeaderItem>
           </ul>
           <div className="flex items-center space-x-4">
             <ButtonControl

@@ -63,7 +63,7 @@ export const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, classNa
             {tokens.map((line, i) => (
               <div {...getLineProps({ line, className: 'flex' })} key={i}>
                 <div
-                  className="w-10 flex-shrink-0 text-[8px] text-editor-line-light dark:text-editor-line-dark"
+                  className="w-10 flex-shrink-0 select-none text-[8px] text-editor-line-light dark:text-editor-line-dark"
                   key={i}
                 >
                   {i + 1}

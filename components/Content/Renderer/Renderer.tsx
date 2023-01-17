@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import { MDXRemote } from 'next-mdx-remote';
-import { Heading, Text } from '@components/Typography';
+import { Heading, Text, List, ListItem } from '@components/Typography';
 import { RendererProps } from '@components/Content/Renderer';
 import { CodeBlock, CodeInline } from '@components/Content/Code';
 import { CodeEditor } from '@components/Content/Code/Editor';
@@ -28,6 +28,17 @@ export const Renderer: FunctionComponent<RendererProps> = props => {
         p: props => <Text className="mb-9">{props.children}</Text>,
         pre: props => <CodeBlock className="mb-9">{props.children}</CodeBlock>,
         code: props => <CodeInline>{props.children}</CodeInline>,
+        ol: props => (
+          <List as="ol" className="mb-9">
+            {props.children}
+          </List>
+        ),
+        ul: props => (
+          <List as="ol" className="mb-9">
+            {props.children}
+          </List>
+        ),
+        li: props => <ListItem>{props.children}</ListItem>,
         CodeEditor,
       }}
     />

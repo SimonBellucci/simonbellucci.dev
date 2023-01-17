@@ -23,6 +23,9 @@ export const CodeEditor: FunctionComponent<SandpackProps> = props => {
         options={{
           showLineNumbers: true,
           showTabs: true,
+          editorHeight: 600,
+          editorWidthPercentage: 60,
+          externalResources: ['https://cdn.tailwindcss.com'],
           classes: {
             'sp-layout': '!rounded-2xl border !border-gray-200 dark:!border-gray-700',
             'sp-cm': 'transition-colors',

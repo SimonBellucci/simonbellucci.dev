@@ -1,23 +1,24 @@
-import { ComponentProps, FunctionComponent } from 'react';
-import Link, { LinkProps } from 'next/link';
+import { FunctionComponent } from 'react';
+import Link from 'next/link';
 import { cx } from 'class-variance-authority';
+import { HeaderItemProps } from '@components/Navigation/Header/Item/Item.types';
+import { headerItemStyles } from '@components/Navigation/Header/Item/Item.styles';
 
-export const HeaderItem: FunctionComponent<LinkProps & ComponentProps<'a'>> = ({
+export const HeaderItem: FunctionComponent<HeaderItemProps> = ({
   href,
   children,
+  disabled,
   className,
 }) => {
   return (
-    <li>
-      <Link
-        href={href}
-        className={cx(
-          'cursor-pointer text-base text-gray-800 transition-colors hover:text-gray-500 dark:text-white dark:hover:text-gray-400',
-          className,
-        )}
-      >
-        {children}
-      </Link>
+    <li className={disabled ? cx(headerItemStyles({ disabled }), className) : ''}>
+      {disabled ? (
+        children
+      ) : (
+        <Link href={href} className={cx(headerItemStyles({ disabled }), className)}>
+          {children}
+        </Link>
+      )}
     </li>
   );
 };
