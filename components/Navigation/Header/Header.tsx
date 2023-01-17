@@ -32,14 +32,14 @@ export const Header: FunctionComponent<ComponentProps<'header'>> = ({ className 
           <ul className="flex space-x-4 self-center lg:space-x-12">
             <HeaderItem href="/about" disabled>
               About{' '}
-              <Tag size="sm" variant="primary">
+              <Tag size="sm" variant="primary" className="hidden sm:block">
                 soon
               </Tag>
             </HeaderItem>
             <HeaderItem href="/articles">Articles</HeaderItem>
             <HeaderItem href="/tools" disabled>
               Tools
-              <Tag size="sm" variant="primary">
+              <Tag size="sm" variant="primary" className="hidden sm:block">
                 soon
               </Tag>
             </HeaderItem>
