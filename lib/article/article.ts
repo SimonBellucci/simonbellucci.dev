@@ -1,20 +1,21 @@
 import fs from 'fs';
+import path from 'path';
 import matter from 'gray-matter';
 import { markdownExtension, rootFolder } from '@lib/common';
 import { ArticleMetadata } from '@lib/article';
 
-export const articlesFolder = 'articles/';
-export const articlesPath = `${rootFolder}${articlesFolder}`;
+export const articlesFolder = 'articles';
 
 /**
  * Returns an article by its slug
  * @param slug
  */
 export const getArticleBySlug = (slug: string) => {
-  const file = `${articlesPath}${slug}${markdownExtension}`;
-
   try {
-    const content = fs.readFileSync(file, 'utf8');
+    const content = fs.readFileSync(
+      path.join(process.cwd(), rootFolder, articlesFolder, `${slug}${markdownExtension}`),
+      'utf8',
+    );
     return matter(content);
   } catch (error) {
     return null;
@@ -23,20 +24,15 @@ export const getArticleBySlug = (slug: string) => {
 
 /**
  * Returns the metadata of an article
- * @param fileName
- * @param addExtension
+ * @param slug
  */
-export const getArticleMetadata = (
-  fileName: string,
-  addExtension = false,
-): ArticleMetadata | null => {
+export const getArticleMetadata = (slug: string): ArticleMetadata | null => {
   try {
     const content = fs.readFileSync(
-      `${articlesPath}${addExtension ? fileName + markdownExtension : fileName}`,
+      path.join(process.cwd(), rootFolder, articlesFolder, `${slug}${markdownExtension}`),
       'utf8',
     );
     const matterResult = matter(content);
-    const slug = addExtension ? fileName : fileName.replace(markdownExtension, '');
 
     return {
       title: matterResult.data.title,
@@ -44,9 +40,8 @@ export const getArticleMetadata = (
       date: matterResult.data.date,
       updated: matterResult.data.updated,
       categories: matterResult.data.categories,
-      type: matterResult.data.type,
       slug,
-      permalink: articlesFolder + slug,
+      permalink: articlesFolder + '/' + slug,
     };
   } catch (e) {
     return null;
@@ -58,10 +53,10 @@ export const getArticleMetadata = (
  * @param limit
  */
 export const getArticlesMetadata = (limit?: number): ArticleMetadata[] => {
-  const files = fs.readdirSync(articlesPath);
+  const files = fs.readdirSync(path.join(process.cwd(), rootFolder, articlesFolder));
   const markdownArticles = files.filter(file => file.endsWith(markdownExtension));
 
   return markdownArticles.slice(...(limit ? [0] : [0, 4])).map(fileName => {
-    return getArticleMetadata(fileName)!;
+    return getArticleMetadata(fileName.replace(markdownExtension, ''))!;
   });
 };

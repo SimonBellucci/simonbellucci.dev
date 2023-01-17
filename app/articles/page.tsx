@@ -1,13 +1,7 @@
 import { ScrollUp } from '@components/Utility/ScrollUp';
 import { ListArticle } from '@components/Block/List/Article';
 
-const ArticlesPage = async ({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams?: { [key: string]: any };
-}) => {
+const ArticlesPage = async () => {
   return (
     <>
       <ScrollUp />
