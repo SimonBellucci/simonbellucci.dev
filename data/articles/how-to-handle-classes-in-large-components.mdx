@@ -13,7 +13,7 @@ But don't get me wrong, I love working with Tailwind ❤️ and have been using 
 
 Let's get back on topic though and take the example of a simple button, this component is going to be visually different depending on its `variant`, it can also be `disabled` and have different sizes. All these props will generate a lot of classes, resulting very quickly in a big mess in our code 🤯, especially if we want to combine props or add others later on.
 
-## What about <em>classnames</em> library ?
+## What about the <em>classnames</em> library ?
 
 The package [classnames](https://github.com/JedWatson/classnames) is excellent, and partially solves this problem by allowing us to split our Tailwind classes within our component. I used this package for a long time and was happy with the logic I had in place to organize my classes.
 
@@ -128,7 +128,7 @@ Some of you know or use [Stiches](https://stitches.dev/), a CSS-in-TS library th
 
 Unfortunately with Tailwind we can't use Stiches... Or maybe we can 🤔 ?
 
-## Getting started cva
+## Getting started with <em>cva</em>
 
 Let's convert our code with [cva](https://github.com/joe-bell/cva)! First let's install the `yarn add class-variance-authority` library. `cva`, like Stiches, is based on the creation of variants and the composition of them. The structure I had in place before was already partly based on this principle, so it's quite simple to convert it with `cva`.
 
