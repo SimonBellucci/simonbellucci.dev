@@ -12,6 +12,16 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
+export const metadata = {
+  icons: {
+    icon: [
+      { url: '/images/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/images/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: '/images/favicon/apple-touch-icon.png',
+  },
+};
+
 const RootLayout = async ({ children }: { children: ReactNode }) => {
   const articles = getArticlesMetadata();
 

@@ -21,7 +21,7 @@ const Home = async () => {
           data={{
             title: {
               content: 'Latest',
-              as: 'h1',
+              as: 'h2',
             },
             introduction:
               'My writings about web development, productivity & human-computer interactions.',
