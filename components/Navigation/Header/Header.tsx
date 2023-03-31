@@ -9,11 +9,17 @@ import { HeaderItem } from '@components/Navigation/Header';
 import { Container } from '@components/Layout';
 import { ThemeSwitchIcon } from '@components/Typography/Icon/ThemeSwitch/ThemeSwitch';
 import { Tag } from '@components/Indicator';
+import useLayout from '@hooks/useLayout/useLayout';
 
 export const Header: FunctionComponent<ComponentProps<'header'>> = ({ className }) => {
   const { resolvedTheme, setTheme } = useTheme();
   const { query } = useKBar();
   const { isMac } = usePlatform();
+  const { showHeader } = useLayout();
+
+  if (!showHeader) {
+    return null;
+  }
 
   return (
     <header
