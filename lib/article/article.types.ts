@@ -1,6 +1,6 @@
-export interface ArticleMetadata {
-  title: string;
-  subtitle: string;
+import { BaseMetadata } from '@lib/seo/seo.types';
+
+export interface ArticleMetadata extends BaseMetadata {
   date: string;
   updated: string;
   categories: string;

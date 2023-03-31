@@ -7,13 +7,12 @@ const nextConfig = {
   compress: true,
   optimizeFonts: true,
   images: {
-    formats: ['image/avif', 'image/webp'],
+    formats: ['image/webp'],
     remotePatterns: [{ hostname: 'localhost' }, { hostname: 'via.placeholder.com' }],
     minimumCacheTTL: 600,
   },
   experimental: {
     appDir: true,
-    isrMemoryCacheSize: 0,
   },
   webpack(config) {
     config.module.rules.push({

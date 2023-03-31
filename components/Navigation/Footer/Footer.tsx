@@ -4,14 +4,21 @@ import { Button } from '@components/Action/Button';
 import { Section } from '@components/Layout';
 import { Text } from '@components/Typography';
 import { Image } from '@components/Utility';
+import useLayout from '@hooks/useLayout/useLayout';
 
 export const Footer: FunctionComponent<ComponentProps<'div'>> = ({ className }) => {
+  const { showFooter } = useLayout();
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
     });
   };
+
+  if (!showFooter) {
+    return null;
+  }
 
   return (
     <Section className={className}>

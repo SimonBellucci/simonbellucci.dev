@@ -18,7 +18,7 @@ export const CardArticle: FunctionComponent<CardArticleProps> = ({ article }) =>
         <Heading as="h3" variant="display-5">
           {article.title}
         </Heading>
-        <Text>{article.subtitle}</Text>
+        <Text>{article.description}</Text>
         <Button variant="tertiary" icon={ArrowRightIcon}>
           Read more
         </Button>

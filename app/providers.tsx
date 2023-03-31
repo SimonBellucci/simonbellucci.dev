@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { CommandBar } from '@components/Action';
 import { ArticleMetadata } from '@lib/article';
 import { domAnimation, LazyMotion } from 'framer-motion';
+import { LayoutProvider } from '@hooks/useLayout';
 
 export const Providers = ({
   children,
@@ -16,7 +17,9 @@ export const Providers = ({
   return (
     <ThemeProvider attribute="class">
       <LazyMotion features={domAnimation}>
-        <CommandBar articles={articles}>{children}</CommandBar>
+        <CommandBar articles={articles}>
+          <LayoutProvider>{children}</LayoutProvider>
+        </CommandBar>
       </LazyMotion>
     </ThemeProvider>
   );

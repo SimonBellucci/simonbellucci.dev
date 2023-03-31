@@ -1,14 +1,25 @@
 import { notFound } from 'next/navigation';
 import { serialize } from 'next-mdx-remote/serialize';
-import { getArticleBySlug, getArticlesMetadata } from '@lib/article';
+import { getArticleBySlug, getArticleMetadata, getArticlesMetadata } from '@lib/article';
 import { Renderer } from '@components/Content/Renderer';
 import { Section } from '@components/Layout';
 import { ScrollUp } from '@components/Utility/ScrollUp';
 import { HeroArticle } from '@components/Block/Hero/Article';
+import { generateSeo } from '@lib/seo';
 
 export const generateStaticParams = async () => {
   const articles = getArticlesMetadata();
   return articles.map(article => ({ slug: article.slug }));
+};
+
+export const generateMetadata = async ({ params }: { params: { slug: string } }) => {
+  const { slug } = params;
+
+  const article = getArticleMetadata(slug);
+
+  if (!article) return null;
+
+  return generateSeo(article);
 };
 
 const ArticlePage = async ({

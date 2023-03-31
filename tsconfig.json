@@ -27,6 +27,6 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-sitemap.config.js", "next-sitemap.config.js", "next.config.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts",  "next.config.js"],
   "exclude": ["node_modules"]
 }

@@ -36,7 +36,7 @@ export const getArticleMetadata = (slug: string): ArticleMetadata | null => {
 
     return {
       title: matterResult.data.title,
-      subtitle: matterResult.data.subtitle,
+      description: matterResult.data.description,
       date: matterResult.data.date,
       updated: matterResult.data.updated,
       categories: matterResult.data.categories,
