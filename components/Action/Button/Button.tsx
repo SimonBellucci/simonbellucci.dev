@@ -42,7 +42,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
     return (
       <Link
         className={classNames}
-        href={href}
+        href={href!}
         aria-label={props['aria-label'] ?? (children as string)}
         {...props}
       >
@@ -53,7 +53,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
 
   return (
     <button
-      disabled={disabled || loading}
+      disabled={disabled || loading || false}
       className={classNames}
       aria-label={props['aria-label'] ?? (children as string)}
       {...props}

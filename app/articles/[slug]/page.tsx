@@ -3,7 +3,6 @@ import { serialize } from 'next-mdx-remote/serialize';
 import { getArticleBySlug, getArticleMetadata, getArticlesMetadata } from '@lib/article';
 import { Renderer } from '@components/Content/Renderer';
 import { Section } from '@components/Layout';
-import { ScrollUp } from '@components/Utility/ScrollUp';
 import { HeroArticle } from '@components/Block/Hero/Article';
 import { generateSeo } from '@lib/seo';
 
@@ -40,20 +39,17 @@ const ArticlePage = async ({
   const source = await serialize(article.content);
 
   return (
-    <>
-      <ScrollUp />
-      <article>
-        <Section>
-          <HeroArticle
-            data={{
-              content: article.content,
-              meta: article.data,
-            }}
-          />
-          <Renderer {...source} />
-        </Section>
-      </article>
-    </>
+    <article>
+      <Section>
+        <HeroArticle
+          data={{
+            content: article.content,
+            meta: article.data,
+          }}
+        />
+        <Renderer {...source} />
+      </Section>
+    </article>
   );
 };
 

@@ -1,6 +1,6 @@
 import { ComponentProps, FunctionComponent } from 'react';
 import Link from 'next/link';
-import classNames from 'classnames';
+import { cx } from 'class-variance-authority';
 
 export const Logo: FunctionComponent<ComponentProps<'svg'>> = ({ className }) => {
   return (
@@ -9,7 +9,7 @@ export const Logo: FunctionComponent<ComponentProps<'svg'>> = ({ className }) =>
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 42 42"
-        className={classNames(
+        className={cx(
           'h-8 w-8 cursor-pointer text-gray-800 transition-colors hover:text-gray-500 dark:text-white dark:hover:text-gray-400 lg:h-11 lg:w-11',
           className,
         )}
