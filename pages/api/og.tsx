@@ -11,7 +11,7 @@ const interSemiBold = fetch(
   new URL('../../public/fonts/Inter/Inter-SemiBold.ttf', import.meta.url),
 ).then(res => res.arrayBuffer());
 
-const gradient = fetch(new URL('../../public/images/og-bg.png', import.meta.url)).then(res =>
+const gradient = fetch(new URL('../../public/images/og-bg.jpeg', import.meta.url)).then(res =>
   res.arrayBuffer(),
 );
 
@@ -46,7 +46,7 @@ const OpenGraph = async (request: NextRequest) => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 42 42"
               //@ts-ignore
-              tw="h-20 w-20 cursor-pointer text-black"
+              tw="h-20 w-20 text-black"
             >
               <path
                 fillRule="evenodd"
