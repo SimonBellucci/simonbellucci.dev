@@ -2,7 +2,9 @@ import { Metadata } from 'next';
 import { BaseMetadata } from '@lib/seo';
 
 export const generateSeo = (metadata: BaseMetadata): Metadata => {
-  const url = 'https://' + process.env.VERCEL_URL || 'http://localhost:3000';
+  const url = process.env.VERCEL_URL
+    ? 'https://' + process.env.VERCEL_URL
+    : 'http://localhost:3000';
 
   return {
     title: `${metadata.title} | Simon Bellucci`,
@@ -12,7 +14,7 @@ export const generateSeo = (metadata: BaseMetadata): Metadata => {
       title: metadata.title,
       description: metadata.description,
       url,
-      siteName: 'Next.js',
+      siteName: 'Simon Bellucci | Front-End Developer',
       images: [
         {
           url: `/api/og?title=${metadata.title}&description=${metadata.description}`,
