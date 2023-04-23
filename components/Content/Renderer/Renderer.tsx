@@ -4,6 +4,8 @@ import { Heading, Text, List, ListItem } from '@components/Typography';
 import { RendererProps } from '@components/Content/Renderer';
 import { CodeBlock, CodeInline } from '@components/Content/Code';
 import { CodeEditor } from '@components/Content/Code/Editor';
+import { Link } from '@components/Action/Link/Link';
+import { Image } from '@components/Utility/Image';
 
 export const Renderer: FunctionComponent<RendererProps> = props => {
   return (
@@ -39,6 +41,12 @@ export const Renderer: FunctionComponent<RendererProps> = props => {
           </List>
         ),
         li: props => <ListItem>{props.children}</ListItem>,
+        a: props => (
+          <Link href={props.href} target={props.target} underline>
+            {props.children}
+          </Link>
+        ),
+        Image,
         CodeEditor,
       }}
     />
