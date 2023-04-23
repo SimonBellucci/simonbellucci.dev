@@ -42,7 +42,7 @@ export const Renderer: FunctionComponent<RendererProps> = props => {
         ),
         li: props => <ListItem>{props.children}</ListItem>,
         a: props => (
-          <Link href={props.href} target={props.target} underline>
+          <Link href={props.href || ''} target={props.target} underline>
             {props.children}
           </Link>
         ),
