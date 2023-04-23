@@ -1,0 +1,359 @@
+---
+title: Generate Dynamic Open Graph Images with Next.js 13.3 and Tailwind
+description: In this article, we will see how to generate dynamic Open Graph images with Next.js 13.3 and Tailwind.
+date: 04-21-2023
+updated: 04-21-2023
+categories: ['frontend']
+slug: generate-dynamic-open-graph-images
+---
+
+In today's digital world, having a strong online presence has become crucial for businesses and individuals alike. Social media platforms play a vital role in building an online presence, and the Open Graph protocol has become a standard for sharing web content on these platforms.
+
+Open Graph protocol enables web developers to define metadata that describes how the content of a web page should be displayed when it is shared on social media platforms. Open Graph images are a vital part of this metadata as they play a crucial role in attracting users' attention to the shared content.
+
+Unfortunately, generating Open Graph images manually for each web page is a tedious and time-consuming task. But with the release of Next.js 13.3, and the implementation of [Vercel's Open Graph (OG) Image Generation](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation/og-image-api) into the framework, automatically generating dynamic Open Graph images has become easier than ever. Under the hood, Vercel's OG Image Generation uses [Satori](https://github.com/vercel/satori) to convert HTML and CSS to SVG.
+
+This article assumes that you have a basic understanding of Next.js API routes and TailwindCSS. If you are new to these technologies, I recommend you to check out their official documentation.
+
+## Create a new API route
+
+To generate our images we will need to create an API route. To do so, create a new file called `og.tsx` under the `pages/api` directory. In this file, we will first create our function that will generate the Open Graph image by using the newly implemented `ImageResponse` from `next/server`. We also need to tell Next.js that we want this function to use the [Edge Runtime](https://nextjs.org/docs/api-reference/edge-runtime) by adding the `export const config = { runtime: 'edge' }` line before the function declaration.
+
+```js
+import { ImageResponse, NextRequest } from 'next/server';
+
+export const config = {
+  runtime: 'edge',
+};
+
+const OpenGraph = async (request: NextRequest) => {
+  const title = 'Hello World !';
+  const description = 'This is our first Open Graph image';
+
+  try {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            backgroundColor: 'black',
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+          }}
+        >
+          <div style={{ fontSize: '48px' }}>{title}</div>
+          <div style={{ fontSize: '16px' }}>{description}</div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+      },
+    );
+  } catch (error) {
+    return new Response(error.message || error.toString(), {
+      status: 500,
+    });
+  }
+};
+
+export default OpenGraph;
+```
+
+You should now be able to access the generated image by visiting `http://localhost:3000/api/og` in your browser, and you should see the following image:
+
+<Image src="/images/articles/og_hello_world.png" alt="Our first generated OG Image" width={1200} height={630} className="mb-9" />
+
+As you can see, we have successfully generated our first Open Graph image in a few lines of code. But we can improve what we've done so far by making the content dynamic and by making the image look better.
+
+## Dynamic Content
+
+Since we are using Next.js API routes, we can easily access the query parameters of the request, we just need to keep in mind that we are using the Edge Runtime that doesn't support the `request.query` object. Instead, we need to parse the `request.url` to get the query parameters. Let's replace the `title` and `description` variables that we defined earlier with the following code:
+
+```js
+const { searchParams } = new URL(request.url);
+
+const title = searchParams.get('title') || 'Hello World !';
+const description = searchParams.get('description') || 'This is our first Open Graph image';
+```
+
+Now, if we visit `http://localhost:3000/api/og?title=Dynamic%20title&description=Dynamic%20description` in our browser, we should see that the content of the image has changed to match the query parameters.
+
+## Let's make it look better
+
+Generating dynamic Open Graph images is great, but it's not what will make your content stand out from the crowd. To do so, we need to make our images look better.
+
+For the rest of this article, we will reproduce my own Open Graph image that I use on my website. Here is what it looks like:
+
+<Image src="/images/articles/og_expected_result.png" alt="The OG image we will reproduce" width={1200} height={630} mdx />
+
+To achieve this result, we will use the following tools:
+
+- [TailwindCSS](https://tailwindcss.com/) to style our image
+- Custom fonts from [Google Fonts](https://fonts.google.com/)
+- Local images for our background
+
+### TailwindCSS
+
+To use TailwindCSS in our Open Graph image, we will use the [experimental implementation of TailwindCSS](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation/og-image-examples#using-tailwind-css---experimental) in Vercel's OG package. Instead of using style objects, we will use the `tw` attribute and TailwindCSS classes to style our image.
+
+Let's replace the `style` attribute of our HTML tags with the following code:
+
+```js
+import { ImageResponse, NextRequest } from 'next/server';
+
+export const config = {
+  runtime: 'edge',
+};
+
+const OpenGraph = async (request: NextRequest) => {
+  const { searchParams } = new URL(request.url);
+
+  const title = searchParams.get('title') || 'Hello World !';
+  const description = searchParams.get('description') || 'This is our first Open Graph image';
+
+  try {
+    return new ImageResponse(
+      (
+        <div tw="bg-black h-full w-full flex flex-col items-center justify-center text-white">
+          <div tw="text-5xl">{title}</div>
+          <div tw="text-base">{description}</div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+      },
+    );
+  } catch (error) {
+    return new Response(error.message || error.toString(), {
+      status: 500,
+    });
+  }
+};
+
+export default OpenGraph;
+```
+
+You should have the same result as before, but now we are using TailwindCSS classes to style our image, quite convenient, isn't it ?
+
+The only limitation is that we can only use some specific classes of TailwindCSS, which correspond to the ones supported in the Satori package. You can find the list of supported CSS properties [here](https://github.com/vercel/satori#css).
+
+### Custom fonts
+
+To match the font you are using on you own website and keep a consistent look and feel between your website and your Open Graph images, you can use custom fonts. To do so, we will need to have the source of the font file located in our project. In my case, I am using the [Inter font](https://fonts.google.com/specimen/Inter) from Google Fonts, so I will need to download the font files for each font weight and font style that I am using and place them inside my `public/fonts` folder.
+
+Then, we need to import the font data in our API route. To do so, we will use the `fetch` function to get the font data and the `ArrayBuffer` object to convert the data to an `ArrayBuffer` object. We will also need to add a `font` key in the options object of the `ImageResponse` function.
+
+We will have the following code:
+
+```js
+import { ImageResponse, NextRequest } from 'next/server';
+
+export const config = {
+  runtime: 'edge',
+};
+
+const inter = fetch(new URL('../../public/fonts/Inter/Inter-Regular.ttf', import.meta.url)).then(
+  res => res.arrayBuffer(),
+);
+const interSemiBold = fetch(
+  new URL('../../public/fonts/Inter/Inter-SemiBold.ttf', import.meta.url),
+).then(res => res.arrayBuffer());
+
+const OpenGraph = async (request: NextRequest) => {
+  const { searchParams } = new URL(request.url);
+
+  const title = searchParams.get('title') || 'Hello World !';
+  const description = searchParams.get('description') || 'This is our first Open Graph image';
+
+  try {
+    const interData = await inter;
+    const interSemiBoldData = await interSemiBold;
+
+    return new ImageResponse(
+      (
+        <div
+          tw="bg-black h-full w-full flex flex-col items-center justify-center text-white"
+          style={{ fontFamily: '"Inter"' }}
+        >
+          <div tw="text-5xl font-semibold">{title}</div>
+          <div tw="text-xl font-normal text-gray-800">{description}</div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+        fonts: [
+          {
+            name: 'Inter',
+            data: interData,
+            weight: 400,
+            style: 'normal',
+          },
+          {
+            name: 'Inter',
+            data: interSemiBoldData,
+            weight: 600,
+            style: 'normal',
+          },
+        ],
+      },
+    );
+  } catch (error) {
+    return new Response(error.message || error.toString(), {
+      status: 500,
+    });
+  }
+};
+
+export default OpenGraph;
+```
+
+### Local images
+
+The same import process can be used to import local images. In my case, I am using a local image for the background of my Open Graph image. To do so, I will need to place the image in my `public/images` folder and import it in my API route. Then I will just need to set the image data in the `src` attribute of the `img` tag.
+
+After adding [my background](/images/og-bg.jpeg), my logo as an SVG and with a bit of styling, you should have the following code:
+
+```js
+import { ImageResponse, NextRequest } from 'next/server';
+
+export const config = {
+  runtime: 'edge',
+};
+
+// Import our fonts
+const inter = fetch(new URL('../../public/fonts/Inter/Inter-Regular.ttf', import.meta.url)).then(
+  res => res.arrayBuffer(),
+);
+const interSemiBold = fetch(
+  new URL('../../public/fonts/Inter/Inter-SemiBold.ttf', import.meta.url),
+).then(res => res.arrayBuffer());
+
+//Import our background
+const background = fetch(new URL('../../public/images/og-bg.jpeg', import.meta.url)).then(res =>
+  res.arrayBuffer(),
+);
+
+const OpenGraph = async (request: NextRequest) => {
+  const { searchParams } = new URL(request.url);
+
+  const title = searchParams.get('title') || 'Hello World !';
+  const description = searchParams.get('description') || 'This is our first Open Graph image';
+
+  try {
+    const interData = await inter;
+    const interSemiBoldData = await interSemiBold;
+    const backgroundData = await background;
+
+    return new ImageResponse(
+      (
+        <div
+          tw="h-full w-full bg-white flex flex-col justify-center"
+          style={{ fontFamily: '"Inter"' }}
+        >
+          <img
+            width="1200"
+            height="630"
+            tw="absolute top-0 left-0 w-full h-full object-cover"
+            src={backgroundData}
+          />
+          <div tw="flex flex-col p-16">
+            <svg
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 42 42"
+              tw="h-20 w-20 text-black"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M17.05 5.972C8.444 7.5 7.2 19.194 15.288 22.515c.978.402.993.294-.2 1.438A4052.494 4052.494 0 0 0 4.268 34.445a394.422 394.422 0 0 1-3.05 2.944c-.448.422-.814.813-.814.869 0 .201 32.61.122 33.87-.082 7.481-1.213 9.968-10.862 4.006-15.546-.874-.687-.872-.627-.054-1.195 5.787-4.019 3.72-13.677-3.287-15.368-1.127-.272-16.437-.354-17.89-.095Zm13.942 2.372c.052.083-.154.363-.505.69-.778.722-7.414 7.15-9.916 9.603-2.342 2.297-2.11 2.15-3.124 1.988-6.798-1.082-6.874-10.936-.096-12.297.81-.162 13.54-.147 13.641.016Zm4.923.625c4.83 2.547 4.177 9.788-1.04 11.547-.732.247-12.88.374-12.88.135 0-.053.61-.691 1.358-1.417 2.07-2.01 8.56-8.303 9.92-9.618 1.375-1.33 1.357-1.325 2.642-.647ZM21.008 23.386c6.218 1.927 5.971 10.517-.351 12.205-.76.203-1.378.221-7.379.221H6.265s2.817-2.648 5.054-4.821c2.236-2.173 4.868-4.73 5.849-5.681a121.2 121.2 0 0 0 1.97-1.94c.248-.275.95-.269 1.87.016Zm13.66.073c6.194 1.79 5.919 10.727-.378 12.291-.948.236-8.734.214-9.358.214-.069 0 .84-.631 1.184-1.077 2.534-3.294 2.43-8.077-.24-11.025-.186-.205-.265-.4-.216-.529.101-.262 8.049-.151 9.009.126Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div tw="max-w-3/4 mt-8 flex flex-col">
+              <div tw="text-5xl font-semibold">{title}</div>
+              <div tw="text-xl mt-5 font-normal text-gray-800">{description}</div>
+            </div>
+            <div tw="text-base mt-8 text-gray-800">simonbellucci.dev</div>
+          </div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+        fonts: [
+          {
+            name: 'Inter',
+            data: interData,
+            weight: 400,
+            style: 'normal',
+          },
+          {
+            name: 'Inter',
+            data: interSemiBoldData,
+            weight: 600,
+            style: 'normal',
+          },
+        ],
+      },
+    );
+  } catch (error) {
+    return new Response(error.message || error.toString(), {
+      status: 500,
+    });
+  }
+};
+
+export default OpenGraph;
+```
+
+And if you go to `https://localhost:3000/api/og?title=Hello%20World&description=This%20is%20our%20first%20Open%20Graph%20image`, you should see the following image:
+
+<Image src="/images/articles/og_end_result.png" alt="The final OG image" width={1200} height={630} mdx />
+
+## How to use it
+
+In order to use this image, you can simply add the endpoint in your metadata object inside the `generateMetadata` function:
+
+```js
+export const generateMetadata = async ({ params }: { params: { slug: string } }) => {
+  const title = 'Your title here';
+  const description = "Your description here";
+  
+  const url = process.env.VERCEL_URL
+    ? 'https://' + process.env.VERCEL_URL
+    : 'http://localhost:3000';
+  
+  return {
+    title,
+    description,
+    metadataBase: new URL(url),
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'Your site name here',
+      images: [
+        {
+          url: `/api/og?title=${title}&description=${description}`,
+          width: 1200,
+          height: 630,
+        },
+      ],
+      locale: 'en-US',
+      type: 'website',
+    },
+  };
+};
+```
+
+## Conclusion
+
+In this article, we have seen how to create an Open Graph image with Next.js 13.3 and Tailwind CSS. It is actually pretty straightforward, and you can use this code as a solid base to create your own Open Graph images.
